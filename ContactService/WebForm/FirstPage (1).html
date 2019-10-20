@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--My custom styles-->
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="text/javascript" src="validate.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" media="screen" href="css/ui-lightness/jquery-ui-1.7.1.custom.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+     
+    <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="js/i18n/grid.locale-en.js" type="text/javascript"></script>
+    <script src="js/jquery.jqGrid.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+     
+    <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="js/i18n/grid.locale-en.js" type="text/javascript"></script>
+    <script src="js/jquery.jqGrid.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" type="text/css" href="themes/redmond/jquery-ui-1.7.1.custom.css" />
+<link rel="stylesheet" type="text/css" href="themes/ui.jqgrid.css" /> 
+
+<link rel="stylesheet" type="text/css" href="../css/redmond/jquery-ui-1.7.2.custom.css"/>
+</head>
+  <body>
+   
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <form class="form-padd">
+        <div class="form-group row">
+          <label for="Name" class="col-sm-2 col-form-label">Имя</label>
+          <div class="col-sm-3">
+            <input type="text" name="Name"  onchange="ValidateName(document.getElementById('Name'))" class="form-control" id="Name" >
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="Surname" class="col-sm-2 col-form-label">Фамилия</label>
+          <div class="col-sm-3">
+            <input type="text" onchange="ValidateSurname(document.getElementById('Surname'))" class="form-control" id="Surname" >
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="Отчество" class="col-sm-2 col-form-label">Отчество</label>
+          <div class="col-sm-3">
+            <input type="text" onchange="ValidateSurname(document.getElementById('Lastname'))" class="form-control" id="Lastname" >
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="Sex" class="col-sm-2 col-form-label">Пол</label>
+          <div class="dropdown col-sm-3">
+     
+              <div class="input-group">                                            
+                  <input type="TextBox" ID="datebox" Class="form-control" readonly="true">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">   
+                  </button>
+                      <ul id="demolist" class="dropdown-menu">
+                          <li><a href="#">Мужской</a></li>
+                          <li><a href="#">Женский</a></li>
+                      </ul>
+                </input>
+              </div>
+
+            </div>
+        </div>
+            
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Дата рождения</label>
+            <div class="col-sm-2">
+              <input value="День" type="text" class="form-control" id="Day" onchange="ValidateDate()">
+            </div>
+            <div class="col-sm-2">
+                <input value="Месяц" type="text" class="form-control" id="Month" onchange="ValidateDate()">
+              </div>
+              <div class="col-sm-2">
+                <input value="Год" type="text" class="form-control" id="Year" onchange="ValidateDate()">
+              </div>
+          </div>
+          <div class="form-group row">
+            <label for="TaxId" class="col-sm-2 col-form-label">ИНН</label>
+            <div class="col-sm-3">
+              <input type="text"  class="form-control" id="TaxId" >
+            </div>
+          </div>
+       
+          <button type="submit" onclick="validate()" class="btn btn-primary" id="submit">Отправить</button>
+        
+      </form>
+
+<table id="jqg"></table>
+<script type="text/javascript">
+$('#demolist li').on('click', function(){
+    $('#datebox').val($(this).text());
+});
+
+$(document).ready(function () {
+    $("#jqg").jqGrid({
+        url: '@Url.Action("GetData")',
+        datatype: "json",
+        colNames: ['Имя', 'Фамилия', 'Отчество', 'Пол', 'Номер телефона', 'День рождения', 'ИНН', 'Должность'],
+        colModel: [
+        { name: 'Name', index: 'Name', width: 200, stype: 'text' },
+        { name: 'Surname', index: 'Surname', width: 200, stype: 'text'},
+        { name: 'Lastname', index: 'Lastname', width: 200, stype: 'text' },
+        { name: 'Sex', index: 'Sex', width: 100, stype: 'text' },
+        { name: 'PhoneNumber', index: 'PhoneNumber', width: 200, stype: 'text' },
+        { name: 'Birthday', index: 'Birthday',  width: 200, stype: 'date' },
+        { name: 'TaxId', index: 'TaxId',  width: 200,  stype: 'text' },
+        { name: 'Post', index: 'Post',  width: 200,  stype: 'text' }
+
+        ],
+        rowNum: 5, // число отображаемых строк
+        loadonce:true, // загрузка только один раз
+        sortname: 'Name', // сортировка по умолчанию по столбцу Id
+        sortorder: "desc", // порядок сортировки
+        caption: "Список контактов"
+    });
+});
+</script> 
+</body>
+</html>
