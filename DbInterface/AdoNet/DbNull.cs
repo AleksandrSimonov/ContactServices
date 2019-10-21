@@ -10,7 +10,8 @@ namespace DbInterface.AdoNet
     {
         public static object TryToDbNull(object obj)
         {
-            if (obj == null)
+
+            if ((obj == null)||(Convert.ToInt32( obj)==-1))
                 return Convert.DBNull;
             else
                 return obj;

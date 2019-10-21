@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.14.0/jquery.jqgrid.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/redmond/jquery-ui.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.14.0/css/ui.jqgrid.min.css">
+      <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--My custom styles-->
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="text/javascript" src="StartPage.js"></script>
+     
+    <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="js/i18n/grid.locale-en.js" type="text/javascript"></script>
+     
+    <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="js/i18n/grid.locale-en.js" type="text/javascript"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/redmond/jquery-ui.min.css">
+
+
+</head>
+  <body>
+   
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <form class="form-padd">
+        <div class="col-sm-5">
+      <h3>Добавьте новый контакт</h3>
+      <br>
+        </div>
+        <div class="form-group row">
+          <label for="Name" class="col-sm-2 col-form-label">Имя</label>
+          <div class="col-sm-3">
+            <input type="text" name="Name"  onchange="ValidateName(document.getElementById('Name'))" class="form-control" id="Name" >
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="Surname" class="col-sm-2 col-form-label">Фамилия</label>
+          <div class="col-sm-3">
+            <input type="text" onchange="ValidateSurname(document.getElementById('Surname'))" class="form-control" id="Surname" >
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="Lastname" class="col-sm-2 col-form-label">Отчество</label>
+          <div class="col-sm-3">
+            <input type="text" onchange="ValidateSurname(document.getElementById('Lastname'))" class="form-control" id="Lastname" >
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="Sex" class="col-sm-2 col-form-label">Пол</label>
+          <div class="dropdown col-sm-3">  
+              <div class="input-group">                                            
+                  <select type="TextBox" ID="datebox" class="custom-select">
+                      <option value="0">Мужской</option>
+                      <option value="1">Женский</option>
+                  </select>
+              </div>
+            </div>
+        </div>
+            
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="Birthday">Дата рождения</label>
+            <div class="col-sm-3">
+              <input placeholder="дд.мм.гггг" type="text" class="form-control" id="Birthday" onchange="ValidateBirthday()">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="TaxId" class="col-sm-2 col-form-label">ИНН</label>
+            <div class="col-sm-3">
+              <input type="text"  class="form-control" id="TaxId" >
+            </div>
+          </div>
+          <div class="form-group row">
+              <label for="PhoneNumber" class="col-sm-2 col-form-label">Номер телефона</label>
+              <div class="col-sm-3">
+                <input type="text" placeholder="+7 (XXX) XXX XX-XX" class="form-control" id="PhoneNumber" >
+              </div>
+            </div>
+            <div class="form-group row">
+                <label for="Post" class="col-sm-2 col-form-label">Должность</label>
+                <div class="col-sm-3">
+                  <input type="text"  class="form-control" id="Post" >
+                </div>
+              </div>
+              <div class="form-group row">
+                  <label for="Job" class="col-sm-2 col-form-label">Место работы</label>
+                  <div class="col-sm-3">
+                      <div class="input-group">
+                          <select class="custom-select" id="Job">
+                            <option value="-1">Безработный</option>
+                          
+                          </select>
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="RefreshJob()">Обновить</button>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+          <button type="button" onclick="validate()" class="btn btn-outline-primary" id="submit">Сохранить контакт</button>
+      </form>
+
+      <div class="form-group row">
+    <div class="col-sm-3">
+   
+        <form class="form-inline">
+          <input class="form-control mr-sm-2" id="IdSearch" type="search" placeholder="Фамилия, Имя" aria-label="Search">
+          <button class="btn btn-outline-primary my-2 my-sm-0" type="button" onclick="SearchContact()">Найти</button>
+          <div>
+                <table class="table table-hover" id="ContactsTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Фамилия</th>
+                            <th scope="col">Отчество</th>
+                            <th scope="col">Пол</th>
+                            <th scope="col">Номер телефона</th>
+                            <th scope="col">День рождения</th>
+                            <th scope="col">ИНН</th>
+                            <th scope="col">Должность</th>
+                            <th scope="col">Работа</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+          </div>
+        </form>
+
+
+      </div>
+      <table id="list"></table>
+     
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+    $("#jqg").jqGrid({
+        url: '@Url.Action("SearchContact")',
+        datatype: "json",
+        colNames: ['Имя', 'Фамилия', 'Отчество', 'Пол', 'Номер телефона', 'День рождения', 'ИНН', 'Должность', 'Место работы'],
+        colModel: [
+        { name: 'Name', index: 'Name', width: 200, stype: 'text' },
+        { name: 'Surname', index: 'Surname', width: 200, stype: 'text'},
+        { name: 'Lastname', index: 'Lastname', width: 200, stype: 'text' },
+        { name: 'Sex', index: 'Sex', width: 100, stype: 'text' },
+        { name: 'PhoneNumber', index: 'PhoneNumber', width: 200, stype: 'text' },
+        { name: 'Birthday', index: 'Birthday',  width: 200, stype: 'date' },
+        { name: 'TaxId', index: 'TaxId',  width: 200,  stype: 'text' },
+        { name: 'Post', index: 'Post',  width: 200,  stype: 'text' },
+        { name: 'Job', index: 'Job',  width: 200,  stype: 'text' }
+
+        ],
+        rowNum: 5, // число отображаемых строк
+        loadonce:true, // загрузка только один раз
+        sortname: 'Name', // сортировка по умолчанию по столбцу Id
+        sortorder: "desc", // порядок сортировки
+        caption: "Список контактов"
+    });
+});
+
+</script>
+
+</body>
+</html>

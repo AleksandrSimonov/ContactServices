@@ -73,7 +73,8 @@ namespace Contact.ContactTest
         {
             string name = RandomName();
             string phoneNumber = RandomPhoneNumber();
-            return new Organization(name, phoneNumber);
+            
+            return new Organization(-1,name, phoneNumber);
         }
         public Contact NextShortContact() => new Contact(
             RandomName(),

@@ -22,14 +22,14 @@ namespace WcfService2
         //     и включите следующую строку в текст операции:
         //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
         [OperationContract]
-        public string InsertContact(string name, string surname, string lastname, int sex, string phoneNumber,
-            string birthday, string taxId, string post, int job)
+        public string InsertContact(string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
+            string Birthday, string TaxId, string Post, int Job)
         {
             ContactDb contactDb = new ContactDb();
             try
             {
-                var Birthday = Convert.ToDateTime(birthday);
-                contactDb.InsertContact(name, surname, lastname, sex, phoneNumber, Birthday, taxId, post, job);
+                var birthday = Convert.ToDateTime(Birthday);
+                contactDb.InsertContact(Name, Surname, Lastname, Sex, PhoneNumber, birthday, TaxId, Post, Job);
             }catch(Exception ex)
             {
               return  "Не удалось сохранить контакт!\n" +
@@ -46,7 +46,7 @@ namespace WcfService2
             try
             {
                 var contacts =  contactDb.GetContact(surname,name);
-                string json = JsonSerializer.Serialize<Contact.Contact>(contacts);
+                string json = JsonSerializer.Serialize<List<Contact.Contact>>(contacts);
 
                 return json;
             }
@@ -55,6 +55,24 @@ namespace WcfService2
                 return "На сервере произошла ошибка";
             }
 
+
+        }
+
+        [OperationContract]
+        public string GetAllOrganizations()
+        {
+            ContactDb contactDb = new ContactDb();
+            try
+            {
+                var organizations = contactDb.GetAllOrganizations();
+                string json = JsonSerializer.Serialize<Contact.Organization>(organizations);
+
+                return json;
+            }
+            catch (Exception ex)
+            {
+                return "На сервере произошла ошибка";
+            }
 
         }
 

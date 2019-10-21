@@ -17,7 +17,7 @@ namespace Contact
 
 
         [MaxLength(15)]
-        public string LastName { get;}
+        public string Lastname { get;}
 
         public SexEnum Sex { get; }
 
@@ -43,13 +43,13 @@ namespace Contact
         {
             if ((name == null) ||
               (surname == null) ||
-              (lastname == null) ||
+              (taxId == null) ||
               (taxId == ""))
                 throw new NullReferenceException();
 
             Name = name;
             Surname = surname;
-            LastName = lastname;
+            Lastname = lastname;
             Sex = sex;
             PhoneNumber = phoneNumber;
             Birthday = birthday;
@@ -68,7 +68,7 @@ namespace Contact
                 throw new NullReferenceException();
             Name = name;
             Surname = surname;
-            LastName = lastname;
+            Lastname = lastname;
             Sex = sex;
             Birthday = birthday;
         }
@@ -95,7 +95,7 @@ namespace Contact
         public object Clone()
         {
             return ((Contact) this.MemberwiseClone()).
-                Job = new Organization(this?.Job?.Name,
+                Job = new Organization(this.Job.Id, this?.Job?.Name,
                 this?.Job?.PhoneNumber);
         }
 

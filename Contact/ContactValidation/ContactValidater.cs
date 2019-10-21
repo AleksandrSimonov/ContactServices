@@ -40,10 +40,10 @@ namespace Contact.ContactValidation
 
         private bool ValidateLastname()
         {
-            var name = nameof(Contact.LastName);
+            var name = nameof(Contact.Lastname);
             var property = _type.GetProperty(name);
             var customAttribute = (MaxLengthAttribute) property.GetCustomAttributes(typeof(MaxLengthAttribute), false)[0];
-            var result = customAttribute.MaxLength.CompareTo(_contact.LastName.Length);
+            var result = customAttribute.MaxLength.CompareTo(_contact.Lastname.Length);
 
             if (result < 0)
                 Result.ErrorsMessage.Add("максимальная длина " + property + " " + customAttribute.MaxLength);
