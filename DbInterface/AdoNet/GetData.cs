@@ -19,8 +19,9 @@ namespace DbInterface.AdoNet
         }
         public List<Contact.Contact> GetContact(string surname, string name)
         {
-            string sql = string.Format($"Select* from Contact where Name Like '{name}%' " +
-                $"");
+            string sql = string.Format($"SELECT* FROM Contacts.dbo.Contact where Contact.Name like N'{name}%' " +
+                $"and Surname like N'{surname}%'");
+
           var contacts = new List<Contact.Contact>(); 
             try
             {
@@ -32,9 +33,8 @@ namespace DbInterface.AdoNet
                     var cmd = new SqlCommand(sql, connction);
                     var reader = cmd.ExecuteReader();
 
-                    while (reader.HasRows)//есть ли данные
-                    {
-                        reader.Read();
+                    while (reader.Read())//есть ли данные
+                    { 
 
                         var x = (Contact.SexEnum)Convert.ToInt32(reader["Sex"]);
                         var x1 = (string)DbNull.IsDbNull(reader["PhoneNumber"]);
@@ -71,8 +71,6 @@ namespace DbInterface.AdoNet
             return contacts;
         }
 
-     
-
         public Organization GetOrganization(int id)
         {
             string sql = string.Format($"Select* from Organization where ID = '{id}'");
@@ -107,10 +105,10 @@ namespace DbInterface.AdoNet
             }
             return job;
         }
-        public Organization GetAllOrganizations()
+        public List<Organization> GetAllOrganizations()
         {
             string sql = string.Format($"Select* from Organization");
-            Organization job = null;
+            var jobs = new List<Organization>();
             try
             {
                 using (var connction = new SqlConnection())
@@ -121,15 +119,15 @@ namespace DbInterface.AdoNet
                     var cmd = new SqlCommand(sql, connction);
                     var reader = cmd.ExecuteReader();
 
-                    if (reader.HasRows)//есть ли данные
+                    while (reader.Read())//есть ли данные
                     {
-                        reader.Read();
 
                         var x = reader["PhoneNumber"];
 
-                        job = new Organization(Convert.ToInt32(reader["ID"]),
+                        jobs.Add( new Organization(Convert.ToInt32(reader["ID"]),
                                                (string)reader["Name"],
-                                               (string)reader["PhoneNumber"]);
+                                               (string)reader["PhoneNumber"])
+                                               );
                     }
 
                     cmd.Dispose();
@@ -139,7 +137,7 @@ namespace DbInterface.AdoNet
             {
                 throw sqlEx;
             }
-            return job;
+            return jobs;
         }
     }
 }

@@ -65,7 +65,7 @@ namespace WcfService2
             try
             {
                 var organizations = contactDb.GetAllOrganizations();
-                string json = JsonSerializer.Serialize<Contact.Organization>(organizations);
+                string json = JsonSerializer.Serialize<List<Contact.Organization>>(organizations);
 
                 return json;
             }

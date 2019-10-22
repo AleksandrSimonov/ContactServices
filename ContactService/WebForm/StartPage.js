@@ -8,7 +8,15 @@ function validate(surname, surname) {
         url: "../ContactService.svc/InsertContact",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: JSON.stringify(DataObject())
+        data: JSON.stringify(DataObject()),
+        success:  function(response) {
+           
+            $.each(response,function(Id, obj)
+            {
+                alert(obj);
+            }
+            );
+        }
       });
     
 }
@@ -150,15 +158,18 @@ var colorCanger = new ColorCanger();
 function RefreshJob(){
   
     $.ajax({
-        url: "http://localhost:8091/ContactService.svc/GetAllOrganizations",
+        url: "../ContactService.svc/GetAllOrganizations",
         method: "POST",
         type: "json",
         success:  function(response) {
             $("#Job").attr('disabled', false);
-            $.each(response,function(Id, Name)
+            $.each(response,function(Id, obj)
             {
-                var obj = JSON.parse(Name);
-                $('#Job').append('<option value="'+obj.Id+'" >'+obj.Name+'</option>');
+                var obj = JSON.parse(obj);
+                $('#Job [value!=-1]').remove();
+                for(let i=0; i< obj.length; i++){
+                $('#Job').append('<option value="'+obj[i].Id+'" >'+obj[i].Name+'</option>');
+            }
             });
         }
     });
@@ -172,10 +183,9 @@ function ObjectForSerchContact(){
 }
 
 function SearchContact(){
-    alert("ghbd");
     $.ajax({
         type: "POST",
-        url: "http://localhost:8091/ContactService.svc/GetContacts",
+        url: "../ContactService.svc/GetContacts",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify({
@@ -188,20 +198,73 @@ function SearchContact(){
             $.each(response,function(Id, obj)
             {
                 var obj = JSON.parse(obj);
-                $('#ContactsTable').append('<tr>'+
-                                                '<th scope="row">1</th>'+
-                                                '<td>'+obj[0].Name+'</td>'+
-                                                '<td>'+obj[0].Surname+'</td>'+
-                                                '<td>'+obj[0].Lastname+'</td>'+
-                                                '<td>'+obj[0].Sex+'</td>'+
-                                                '<td>'+obj[0].PhoneNumber+'</td>'+
-                                                '<td>'+Date(obj[0].Birthday)+'</td>'+
-                                                '<td>'+obj[0].TaxId+'</td>'+
-                                                '<td>'+obj[0].Post+'</td>'+
-                                                '<td>'+obj[0].Job.Name+'</td>'+
+
+                $('#ContactsTable tbody').remove();
+              
+                for(let i=0; i<obj.length; i++){
+                    
+                $('#ContactsTable').append('<tr id= "'+obj[i].TaxId+'" data-toggle="popover" data-content="удалить контакт">'+
+                                                '<th scope="row">'+(i+1)+'</th>'+
+                                                '<td>'+obj[i].Name+'</td>'+
+                                                '<td>'+obj[i].Surname+'</td>'+
+                                                '<td>'+NullToUndefind(obj[i].Lastname)+'</td>'+
+                                                '<td>'+CodeToSex(obj[i].Sex)+'</td>'+
+                                                '<td>'+NullToUndefind(obj[i].PhoneNumber)+'</td>'+
+                                                '<td>'+Date(obj[i].Birthday)+'</td>'+
+                                                '<td>'+obj[i].TaxId+'</td>'+
+                                                '<td>'+NullToUndefind(obj[i].Post)+'</td>'+
+                                                '<td>'+NullToUndefind(obj[i].Job.Name)+'</td>'+
+                                                '<td> <button onclick="EditContact(this)" id= "'+obj[i].TaxId+'" type="button" class="btn btn-outline-primary">редактировать контакт</button> </td>'+
+                                                '<td> <button onclick="DeleteContact(this)" id= "'+obj[i].TaxId+'" type="button" class="btn btn-outline-danger">удалить контакт</button> </td>'+
                                            '</tr>');
+                                        
+                                       
+                              
+                }
+                alert("По запросу найдено "+obj.length+" контактов(а)");
                 //$('#ContactsTable').append('<option value="'+obj.Id+'" >'+obj.Name+'</option>');
             });
         }
       });
+}
+
+
+function DeleteContact(contact){
+  
+    $.ajax({
+        type: "POST",
+        url: "../ContactService.svc/DeleteContact",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({
+            taxId: contact.id
+        }),
+        success: function(){
+            $('#ContactsTable [id= '+contact.id+']').remove();
+            alert("контакт успешно удален");
+        }
+      });
+     
+      
+}
+
+function EditContact(contact){
+   $('#ContactsTable [id= '+contact.id+'] td').each(function(id,col){
+      col.contenteditable="true"})
+      
+}
+
+function CodeToSex(codeOfSex){
+    if(Number(codeOfSex)==0)
+        return "Муж.";
+    if(Number(codeOfSex)==1)
+        return "Жен.";
+        else
+        return "ошибка";
+}
+function NullToUndefind(field){
+    if(field==null)
+        return "не указано";
+    else 
+        return field;
 }

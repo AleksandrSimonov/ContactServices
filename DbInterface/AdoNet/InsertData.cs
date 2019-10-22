@@ -46,7 +46,7 @@ namespace DbInterface.AdoNet
                     cmd.Parameters.AddWithValue("@Birthday", Birthday);
                     cmd.Parameters.AddWithValue("@TaxId", TaxId);
                     cmd.Parameters.AddWithValue("@Post", DbNull.TryToDbNull( Post));
-                    cmd.Parameters.AddWithValue("@Job", DbNull.TryToDbNull( Job));
+                    cmd.Parameters.AddWithValue("@Job", Convert.ToString(DbNull.TryToDbNull( Job)));
 
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();

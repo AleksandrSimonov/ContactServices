@@ -20,10 +20,10 @@ namespace DbInterface.AdoNet
             _ConnectionString.IntegratedSecurity = true;
             _ConnectionString.Pooling = false;
         }
-        public Organization GetAllOrganizations()
+        public List<Organization> GetAllOrganizations()
         {
-            var organization = new GetData(_ConnectionString);
-            return organization.GetAllOrganizations();
+            var organizations = new GetData(_ConnectionString);
+            return organizations.GetAllOrganizations();
         }
         public List<Contact.Contact> GetContact(string surname, string name)
         {
