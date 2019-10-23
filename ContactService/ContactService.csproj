@@ -101,10 +101,11 @@
   <ItemGroup>
     <Content Include="ContactService.svc" />
     <Content Include="Web.config" />
-    <Content Include="WebForm\FirstPage %281%29.html" />
-    <Content Include="WebForm\SecondPage.html" />
+    <Content Include="WebForm\jquery-3.4.1.min.js" />
+    <Content Include="WebForm\StartPage.html" />
+    <Content Include="WebForm\StartPage.js" />
     <Content Include="WebForm\styles %281%29.css" />
-    <Content Include="WebForm\validate %281%29.js" />
+    <Content Include="WebForm\styles.css" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -21,6 +21,28 @@ function validate(surname, surname) {
     
 }
 
+function UpdateContact() {
+    ValidateName(document.getElementById("Name"));
+    ValidateName(document.getElementById("Surname"));
+    ValidateName(document.getElementById("Lastname"));
+
+    $.ajax({
+        type: "POST",
+        url: "../ContactService.svc/UpdateContact",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(DataObject()),
+        success:  function(response) {
+           
+            $.each(response,function(Id, obj)
+            {
+                alert(obj);
+            }
+            );
+        }
+      });
+
+}
 
 function DataObject(){
     return {
@@ -82,16 +104,17 @@ function ValidateLastname(Lastname){
 }
 function DateToString(date) {
 
+    date = new Date(date);
+
     var dd = date.getDate();
     if (dd < 10) dd = '0' + dd;
   
     var mm = date.getMonth() + 1;
     if (mm < 10) mm = '0' + mm;
   
-    var yy = date.getFullYear();
-    if (yy < 10) yy = '0' + yy;
+    var yyyy = date.getFullYear();
   
-    return dd + '.' + mm + '.' + yy;
+    return dd + '.' + mm + '.' +yyyy;
   }
   function StringToDate(strDate) {
 
@@ -152,9 +175,6 @@ function ColorCanger(){
 }
 var colorCanger = new ColorCanger();
 
-
-
-
 function RefreshJob(){
   
     $.ajax({
@@ -209,12 +229,12 @@ function SearchContact(){
                                                 '<td>'+obj[i].Surname+'</td>'+
                                                 '<td>'+NullToUndefind(obj[i].Lastname)+'</td>'+
                                                 '<td>'+CodeToSex(obj[i].Sex)+'</td>'+
-                                                '<td>'+NullToUndefind(obj[i].PhoneNumber)+'</td>'+
-                                                '<td>'+Date(obj[i].Birthday)+'</td>'+
+                                                '<td>'+DateToString( obj[i].Birthday)+'</td>'+
                                                 '<td>'+obj[i].TaxId+'</td>'+
+                                                '<td>'+NullToUndefind(obj[i].PhoneNumber)+'</td>'+
                                                 '<td>'+NullToUndefind(obj[i].Post)+'</td>'+
                                                 '<td>'+NullToUndefind(obj[i].Job.Name)+'</td>'+
-                                                '<td> <button onclick="EditContact(this)" id= "'+obj[i].TaxId+'" type="button" class="btn btn-outline-primary">редактировать контакт</button> </td>'+
+                                                '<td> <button id= "'+obj[i].TaxId+'" type="button" class="btn btn-outline-primary" onclick="UpdateContactForm(this)">редактировать контакт</button> </td>'+
                                                 '<td> <button onclick="DeleteContact(this)" id= "'+obj[i].TaxId+'" type="button" class="btn btn-outline-danger">удалить контакт</button> </td>'+
                                            '</tr>');
                                         
@@ -227,8 +247,42 @@ function SearchContact(){
         }
       });
 }
+function AddNewContactForm(){
+    $('#Name').val("")
+    $('#Surname').val("")
+    $('#Lastname').val("")
+    $('#Sex').val("")
+    $('#Birthday').val("")
+    $('#TaxId').val("")
+    $('#SurPhonwNumber').val("")
+    $('#Post').val("")
+    $('#Job').val("")
+    $('#TaxId')[0].readOnly=false;
+    $('#exampleModalCenter').modal();
+    $('#ContactFormTitle')[0].innerText="Добавьте новый контакт";
+    $('#ContactToDb')[0].onclick = validate;
+}
+function UpdateContactForm(options){
+    $('#exampleModalCenter').modal();
 
+    $('#ContactFormTitle')[0].innerText="Введите изменения в контакт";
+    $('#Name').val( $('#'+options.id+' td')[0].innerHTML);
+    $('#Surname').val( $('#'+options.id+' td')[1].innerHTML);
+    $('#Lastname').val( $('#'+options.id+' td')[2].innerHTML);
+    $('#Sex').val( $('#'+options.id+' td')[3].innerHTML);
+    $('#Birthday').val( $('#'+options.id+' td')[4].innerHTML);
+    $('#TaxId').val( $('#'+options.id+' td')[5].innerHTML);
+    $('#TaxId')[0].readOnly=true;
+    $('#SurPhonwNumber').val( $('#'+options.id+' td')[6].innerHTML);
+    $('#Post').val( $('#'+options.id+' td')[7].innerHTML);
+    $('#Job').val( $('#'+options.id+' td')[8].innerHTML);
 
+    $('#ContactToDb')[0].onclick = UpdateContact;
+
+}
+function InizializeForm(){
+  
+}
 function DeleteContact(contact){
   
     $.ajax({
@@ -250,8 +304,7 @@ function DeleteContact(contact){
 
 function EditContact(contact){
    $('#ContactsTable [id= '+contact.id+'] td').each(function(id,col){
-      col.contenteditable="true"})
-      
+      col.contenteditable="true"})    
 }
 
 function CodeToSex(codeOfSex){
@@ -267,4 +320,9 @@ function NullToUndefind(field){
         return "не указано";
     else 
         return field;
+} 
+
+function ShowContactForm(){
+    document.getElementById("ContactForm").hidden=false;
+
 }

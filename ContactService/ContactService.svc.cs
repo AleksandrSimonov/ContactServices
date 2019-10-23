@@ -77,14 +77,14 @@ namespace WcfService2
         }
 
         [OperationContract]
-        public string UpdateContact(string name, string surname, string lastname, int sex, string phoneNumber,
-           string birthday, string taxId, string post, int job)
+        public string UpdateContact(string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
+            string Birthday, string TaxId, string Post, int Job)
         {
             ContactDb contactDb = new ContactDb();
             try
             {
-                var Birthday = Convert.ToDateTime(birthday);
-                contactDb.UpdateContact(name, surname, lastname, sex, phoneNumber, Birthday, taxId, post, job);
+                var birthday = Convert.ToDateTime(Birthday);
+                contactDb.UpdateContact(Name, Surname, Lastname, Sex, PhoneNumber, birthday, TaxId, Post, Job);
             }
             catch (Exception ex)
             {
