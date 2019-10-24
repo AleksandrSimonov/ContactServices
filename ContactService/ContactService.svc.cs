@@ -1,51 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.ServiceModel.Web;
-using System.Text;
 using System.Text.Json;
-using Contact;
 using DbInterface.AdoNet;
-
-namespace WcfService2
+using System.Configuration;
+namespace ContactService
 {
     [ServiceContract(Namespace = "")]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    public class Service2
+    public class ContactService
     {
         // Чтобы использовать протокол HTTP GET, добавьте атрибут [WebGet]. (По умолчанию ResponseFormat имеет значение WebMessageFormat.Json.)
         // Чтобы создать операцию, возвращающую XML,
         //     добавьте [WebGet(ResponseFormat=WebMessageFormat.Xml)]
         //     и включите следующую строку в текст операции:
         //         WebOperationContext.Current.OutgoingResponse.ContentType = "text/xml";
-        [OperationContract]
-        public string InsertContact(string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
-            string Birthday, string TaxId, string Post, int Job)
+
+        private readonly string _DataSource;
+        public ContactService()
         {
-            ContactDb contactDb = new ContactDb();
+            _DataSource = Convert.ToString(ConfigurationManager.AppSettings["DataSource"]);
+        }
+
+        [OperationContract]
+        public string InsertOrUpdateContact(int Id, string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
+            string Birthday, string ITN, string Post, int Job)
+        {
+            var contactDB = new ContactDB(_DataSource);
             try
             {
                 var birthday = Convert.ToDateTime(Birthday);
-                contactDb.InsertContact(Name, Surname, Lastname, Sex, PhoneNumber, birthday, TaxId, Post, Job);
-            }catch(Exception ex)
+                contactDB.InsertOrUpdateContact(Id, Name, Surname, Lastname, Sex, PhoneNumber, birthday, ITN, Post, Job);
+                return "Контакт успешно сохранен.";
+            }
+            catch(Exception)
             {
               return  "Не удалось сохранить контакт!\n" +
                     "Возможно контакт с таким же ИНН уже добавлен.";
             }
-            return "Контакт успешно сохранен.";
+            
            
         }
 
         [OperationContract]
         public string GetContacts(string surname, string name)
         {
-            ContactDb contactDb = new ContactDb();
+            var contactDB = new ContactDB(_DataSource);
             try
             {
-                var contacts =  contactDb.GetContact(surname,name);
+                var contacts =  contactDB.GetContacts(surname,name);
                 string json = JsonSerializer.Serialize<List<Contact.Contact>>(contacts);
 
                 return json;
@@ -61,15 +65,15 @@ namespace WcfService2
         [OperationContract]
         public string GetAllOrganizations()
         {
-            ContactDb contactDb = new ContactDb();
+            var organizationDB = new OrganizationDB(_DataSource);
             try
             {
-                var organizations = contactDb.GetAllOrganizations();
+                var organizations = organizationDB.GetAllOrganizations();
                 string json = JsonSerializer.Serialize<List<Contact.Organization>>(organizations);
 
                 return json;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "На сервере произошла ошибка";
             }
@@ -77,32 +81,14 @@ namespace WcfService2
         }
 
         [OperationContract]
-        public string UpdateContact(string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
-            string Birthday, string TaxId, string Post, int Job)
+        public string DeleteContact(string Id)
         {
-            ContactDb contactDb = new ContactDb();
+            var contactDb = new ContactDB(_DataSource);
             try
             {
-                var birthday = Convert.ToDateTime(Birthday);
-                contactDb.UpdateContact(Name, Surname, Lastname, Sex, PhoneNumber, birthday, TaxId, Post, Job);
+                contactDb.DeleteContact(Id);
             }
-            catch (Exception ex)
-            {
-                return "Не удалось обновить контакт!";
-            }
-            return "Контакт успешно обновлен.";
-
-        }
-
-        [OperationContract]
-        public string DeleteContact(string taxId)
-        {
-            ContactDb contactDb = new ContactDb();
-            try
-            {
-                contactDb.DeleteContact(taxId);
-            }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "При удалении контакта произошла ошибка!";
             }

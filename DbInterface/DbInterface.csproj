@@ -76,12 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdoNet\ContactDb.cs" />
+    <Compile Include="AdoNet\ContactDB.cs" />
     <Compile Include="AdoNet\DbNull.cs" />
-    <Compile Include="AdoNet\DeleteData.cs" />
-    <Compile Include="AdoNet\GetData.cs" />
-    <Compile Include="AdoNet\InsertData.cs" />
-    <Compile Include="AdoNet\UpdateData.cs" />
+    <Compile Include="AdoNet\OrganizationDB.cs" />
     <Compile Include="Connected Services\ServiceReference1\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

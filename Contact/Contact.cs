@@ -7,6 +7,7 @@ namespace Contact
     [TypeDescription("Person")]
     public sealed class Contact : ICloneable
     {
+        public int Id { get; }
 
         [MaxLength(15)]
         public string Name { get;}
@@ -24,48 +25,51 @@ namespace Contact
         [RegularExpression(@"^\+\d \(\d{3}\) \d{3}-\d{2}-\d{2}$")]
         public string PhoneNumber { get; set; }
 
-        private DateTime _Birthday;
         [MinBirthday(1980, 1, 1)]
         public DateTime Birthday
         {
             get;
         }
 
-        public string TaxId { get; set; }
+        public string ITN { get; set; }
 
         public string Post { get; set; }
 
         public Organization Job { get; set; }
 
         private Contact() { }
-        public Contact(string name, string surname, string lastname, SexEnum sex,
-            string phoneNumber, DateTime birthday, string taxId, string post, Organization job)
+        public Contact(int id, string name, string surname, string lastname, SexEnum sex,
+            string phoneNumber, DateTime birthday, string ITN, string post, Organization job)
         {
             if ((name == null) ||
               (surname == null) ||
-              (taxId == null) ||
-              (taxId == ""))
+              (ITN == null) ||
+              (ITN == "")||
+              (id==-1))
                 throw new NullReferenceException();
 
+            Id = id;
             Name = name;
             Surname = surname;
             Lastname = lastname;
             Sex = sex;
             PhoneNumber = phoneNumber;
             Birthday = birthday;
-            TaxId = taxId;
+            this.ITN = ITN;
             Post = post;
             Job = job;
         }
 
-        public Contact(string name, string surname, string lastname, SexEnum sex, double taxId,
+        public Contact(int id, string name, string surname, string lastname, SexEnum sex, double ITN,
             DateTime birthday)
         {
             if ((name == null) ||
                 (surname == null) ||
                 (lastname == null) ||
-                (taxId == 0))
+                (ITN == 0)||
+              (id == 0))
                 throw new NullReferenceException();
+            Id = id;
             Name = name;
             Surname = surname;
             Lastname = lastname;
@@ -84,12 +88,12 @@ namespace Contact
                 return false;
             if (obj.GetType() != typeof(Contact))
                 return false;
-            return this.TaxId.Equals(((Contact) obj).TaxId);
+            return this.ITN.Equals(((Contact) obj).ITN);
         }
 
         public override int GetHashCode()
         {
-            return this.TaxId.GetHashCode();
+            return this.ITN.GetHashCode();
         }
 
         public object Clone()

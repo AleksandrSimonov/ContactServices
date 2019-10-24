@@ -58,12 +58,15 @@
             </div>
             <div class="modal-body">
                 <form  id="ContactForm">
-                 
+                 <input id="ContactId" hidden="true" value="-1">
                     <div class="form-group row">
                       <div class="col-sm-2"></div>
                       <label for="Name" class="col-sm-2 col-form-label">Имя</label>
                       <div class="col-sm-6">
-                        <input type="text" name="Name"  onchange="ValidateName(document.getElementById('Name'))" class="form-control" id="Name" >
+                        <input type="text" name="Name"  onchange="ValidateName(document.getElementById('Name'))" class="form-control" id="Name" required >
+                        <div class="invalid-feedback">
+                          Имя не должно превышать 15 символов
+                        </div>
                       </div>
                     </div>
             
@@ -71,16 +74,24 @@
                       <div class="col-sm-2"></div>
                       <label for="Surname" class="col-sm-2 col-form-label">Фамилия</label>
                       <div class="col-sm-6">
-                        <input type="text" onchange="ValidateSurname(document.getElementById('Surname'))" class="form-control" id="Surname" >
+                        <input type="text" onchange="ValidateSurname(document.getElementById('Surname'))" class="form-control" id="Surname" required >
+                        <div class="invalid-feedback">
+                          Фамилия не должна превышать 15 символов
+                        </div>
                       </div>
                     </div>
+
                     <div class="form-group row">
                       <div class="col-sm-2"></div>
                       <label for="Lastname" class="col-sm-2 col-form-label">Отчество</label>
                       <div class="col-sm-6">
-                        <input type="text" onchange="ValidateSurname(document.getElementById('Lastname'))" class="form-control" id="Lastname" >
+                        <input type="text" onchange="ValidateLastname(document.getElementById('Lastname'))" class="form-control" id="Lastname" >
+                        <div class="invalid-feedback">
+                          Отчество не должно превышать 15 символов
+                        </div>
                       </div>
                     </div>
+
                     <div class="form-group row">
                       <div class="col-sm-2"></div>
                       <label for="Sex" class="col-sm-2 col-form-label">Пол</label>
@@ -98,23 +109,35 @@
                       <div class="col-sm-2"></div>
                         <label class="col-sm-2 col-form-label" for="Birthday">Дата рождения</label>
                         <div class="col-sm-6">
-                          <input placeholder="дд.мм.гггг" type="text" class="form-control" id="Birthday" onchange="ValidateBirthday()">
+                          <input placeholder="дд.мм.гггг" type="text" class="form-control" id="Birthday" onchange="ValidateBirthday(document.getElementById('Birthday'))" required>
+                          <div class="invalid-feedback">
+                            Дата рождения не должна быть раньше 1.1.1990 и соответствовать формату дд.мм.гггг
+                          </div>
                         </div>
                       </div>
+
                       <div class="form-group row">
                         <div class="col-sm-2"></div>
-                        <label for="TaxId" class="col-sm-2 col-form-label">ИНН</label>
+                        <label for="ITN" class="col-sm-2 col-form-label">ИНН</label>
                         <div class="col-sm-6">
-                          <input  type="text"  class="form-control" id="TaxId" >
+                          <input  type="text" onchange="ValidateITN(document.getElementById('ITN'))"  class="form-control" id="ITN" >
+                          <div class="invalid-feedback">
+                            ИНН должен состоять 12 цифр
+                          </div>
                         </div>
                       </div>
+
                       <div class="form-group row">
                         <div class="col-sm-2"></div>
                           <label for="PhoneNumber" class="col-sm-2 col-form-label">Номер телефона</label>
                           <div class="col-sm-6">
-                            <input type="text" placeholder="+7 (XXX) XXX XX-XX" class="form-control" id="PhoneNumber" >
+                            <input type="text" placeholder="+7 (XXX) XXX XX-XX" class="form-control" id="PhoneNumber" onchange="ValidatePhoneNumber(document.getElementById('PhoneNumber'))">
+                            <div class="invalid-feedback">
+                              Номер телефона должен соответствовать +7 (XXX) XXX XX-XX
+                            </div>
                           </div>
                         </div>
+
                         <div class="form-group row">
                           <div class="col-sm-2"></div>
                             <label for="Post" class="col-sm-2 col-form-label">Должность</label>
@@ -122,6 +145,7 @@
                               <input type="text"  class="form-control" id="Post" >
                             </div>
                           </div>
+
                           <div class="form-group row">
                             <div class="col-sm-2"></div>
                               <label for="Job" class="col-sm-2 col-form-label">Место работы</label>
@@ -140,7 +164,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button"  class="btn btn-outline-secondary" data-dismiss="modal" id="submit">отмена</button>
-                <button type="button" id="ContactToDb" onclick="validate()" class="btn btn-outline-primary" id="submit">Сохранить контакт</button>
+                <button type="button" id="ContactToDb" onclick="InsertOrUpdateContact()" class="btn btn-outline-primary" id="submit">Сохранить контакт</button>
             </div>
           </div>
         </div>
@@ -189,6 +213,26 @@
         </form>
 
 
+      </div>
+
+      <div class="modal" id="DeleteСonfirm" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">ВНИМАНИЕ!</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Вы действительно хотите удалить контакт</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary">Нет</button>
+              <button type="button" class="btn btn-outline-primary" onclick="DeleteContact(document.getElementById('ContactId'))" data-dismiss="modal">Да</button>
+            </div>
+          </div>
+        </div>
       </div>
 </body>
 </html>

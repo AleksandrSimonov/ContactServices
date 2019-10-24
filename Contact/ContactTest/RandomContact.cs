@@ -57,7 +57,7 @@ namespace Contact.ContactTest
             var birthday = new DateTime(year, month, day);
             return birthday;
         }
-        private double RandomTaxId()
+        private double RandomITN()
         {
             int length = 12;
             return _rand.Next(
@@ -76,12 +76,12 @@ namespace Contact.ContactTest
             
             return new Organization(-1,name, phoneNumber);
         }
-        public Contact NextShortContact() => new Contact(
+        public Contact NextShortContact() => new Contact(0,
             RandomName(),
             RandomSurname(),
             RandomLastname(),
             RandomSex(),
-            RandomTaxId(),
+            RandomITN(),
             RandomBirthday());
         public Contact NextFullContact()
         {

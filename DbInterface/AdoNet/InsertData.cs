@@ -19,8 +19,8 @@ namespace DbInterface.AdoNet
             _ConnectionString = connectionString;
 
             _SqlContact = string.Format("Insert Into Contact" +
-                  "(Name, Surname, Lastname, Sex, PhoneNumber, Birthday, TaxId, Post, Job) " +
-                  "Values(@Name, @Surname, @Lastname, @Sex, @PhoneNumber, @Birthday, @TaxId, @Post, @Job)");
+                  "(Name, Surname, Lastname, Sex, PhoneNumber, Birthday, ITN, Post, Job) " +
+                  "Values(@Name, @Surname, @Lastname, @Sex, @PhoneNumber, @Birthday, @ITN, @Post, @Job)");
 
             _SqlOrganization = string.Format("Insert Into Organization" +
                   "(Name, PhoneNumber) " +
@@ -28,56 +28,14 @@ namespace DbInterface.AdoNet
         }
 
         public void InsertToContact(string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
-                                    DateTime Birthday, string TaxId, string Post, int Job)
+                                    DateTime Birthday, string ITN, string Post, int Job)
         {
-            try
-            {
-                using (var connction = new SqlConnection())
-                {
-                    connction.ConnectionString = _ConnectionString.ToString();
-                    connction.Open();
-
-                    var cmd = new SqlCommand(_SqlContact, connction);
-                    cmd.Parameters.AddWithValue("@Name", Name);
-                    cmd.Parameters.AddWithValue("@Surname", Surname);
-                    cmd.Parameters.AddWithValue("@Lastname", DbNull.TryToDbNull( Lastname));
-                    cmd.Parameters.AddWithValue("@Sex", Sex);
-                    cmd.Parameters.AddWithValue("@PhoneNumber", DbNull.TryToDbNull( PhoneNumber));
-                    cmd.Parameters.AddWithValue("@Birthday", Birthday);
-                    cmd.Parameters.AddWithValue("@TaxId", TaxId);
-                    cmd.Parameters.AddWithValue("@Post", DbNull.TryToDbNull( Post));
-                    cmd.Parameters.AddWithValue("@Job", Convert.ToString(DbNull.TryToDbNull( Job)));
-
-                    cmd.ExecuteNonQuery();
-                    cmd.Dispose();
-                }
-            } catch (SqlException sqlEx)
-            {
-                throw sqlEx; 
-            }
+           
         }
        
         public void InsertToOrganization(string Name, string PhoneNumber)
         {
-            try
-            {
-                using (var connction = new SqlConnection())
-                {
-                    connction.ConnectionString = _ConnectionString.ToString();
-                    connction.Open();
-
-                    var cmd = new SqlCommand(_SqlOrganization, connction);
-                    cmd.Parameters.AddWithValue("@Name", Name);
-                    cmd.Parameters.AddWithValue("@PhoneNumber", PhoneNumber);
-
-                    cmd.ExecuteNonQuery();
-                    cmd.Dispose();
-                }
-            }
-            catch (SqlException sqlEx)
-            {
-                throw sqlEx;
-            }
+            
         }
     }
 }
