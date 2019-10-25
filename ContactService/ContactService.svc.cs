@@ -58,8 +58,27 @@ namespace ContactService
             {
                 return "На сервере произошла ошибка";
             }
+        }
 
+        [OperationContract]
+        public string GetContactsFile(string surname, string name)
+        {
+            var contactDB = new ContactDB(_DataSource);
+            Contact.ContactFileSaver fileSaver=null;
+            try
+            {
+                var contacts = contactDB.GetContacts(surname, name);
+                fileSaver = new Contact.ContactFileSaver();
+                fileSaver.Save(contacts);
+                return "http://localhost:8091/files/file.csv";
 
+            }
+            catch (Exception ex)
+            {
+                if(fileSaver!=null)
+                    fileSaver.Dispose();
+              return null;
+            }
         }
 
         [OperationContract]

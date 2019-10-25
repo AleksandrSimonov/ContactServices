@@ -151,9 +151,12 @@
                               <label for="Job" class="col-sm-2 col-form-label">Место работы</label>
                               <div class="col-sm-6">
                                   <div class="input-group">
-                                      <select class="custom-select" id="Job">
+                                      <select class="custom-select" id="Job" required>
                                         <option selected value="-1" >Безработный</option>  
                                       </select>
+                                      <div class="invalid-feedback">
+                                     
+                                      </div>
                                       <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button" onclick="RefreshJob()">Обновить</button>
                                       </div>
@@ -164,7 +167,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button"  class="btn btn-outline-secondary" data-dismiss="modal" id="submit">отмена</button>
-                <button type="button" id="ContactToDb" onclick="InsertOrUpdateContact()" class="btn btn-outline-primary" id="submit">Сохранить контакт</button>
+                <button type="button" id="ContactToDb" onclick="InsertOrUpdateContact()" data-dismiss="modal" class="btn btn-outline-primary" id="submit">Сохранить контакт</button>
             </div>
           </div>
         </div>
@@ -176,10 +179,15 @@
    
         <form class="form-inline mt-sm-5 ml-sm-5">
          
-            <div class="col-sm-3">
+            <div class="col-sm-2">
           <button type="button" class="btn btn-outline-primary" data-toggle="modal" onclick="AddNewContactForm()">Добавить контакт</button>
             </div>
-            <div class="col-sm-5"></div>
+            <div class="col-sm-2">
+           
+                    <button class="btn btn-outline-primary" onclick="GetContactsFile()" type="button">Скачать Excel файл</button>
+               
+            </div>
+            <div class="col-sm-2"></div>
             <div class="col">
           <input class="form-control" id="IdSearch" type="search" placeholder="Фамилия, Имя" aria-label="Search">
           <button class="btn btn-outline-primary " type="button" onclick="SearchContact()">Найти</button>

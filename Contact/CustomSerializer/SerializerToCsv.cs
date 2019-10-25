@@ -25,21 +25,27 @@ namespace Contact.CustomSerializer
 
             // First line contains field names
             object prpValue = "";
+
             foreach (PropertyInfo prp in properties)
             {
                 if (prp.CanRead)
                 {
 
                     csvName.Append(prp.Name).Append(';');
+              
                     prpValue = prp.GetValue(obj, null);
-
-                    if (prpValue.GetType() == typeof(DateTime))
-                    {
-                        var dateTime = Convert.ToDateTime(prpValue);
-                        csvValue.Append(dateTime.ToString(dateFormat)).Append(';');
-                    }
+                    if (prpValue == null)
+                        csvValue.Append("Не указано").Append(';');
                     else
-                        csvValue.Append(prp.GetValue(obj, null)).Append(';');
+                    {
+                        if (prpValue.GetType() == typeof(DateTime))
+                        {
+                            var dateTime = Convert.ToDateTime(prpValue);
+                            csvValue.Append(dateTime.ToString(dateFormat)).Append(';');
+                        }
+                        else
+                            csvValue.Append(prp.GetValue(obj, null)).Append(';');
+                    }
                 }
             }
             csvName.Length--; // Remove last ";"

@@ -44,8 +44,13 @@ namespace DbInterface.AdoNet
                         var sex = (SexEnum)Convert.ToInt32(reader["Sex"]);
                         var phoneNumber = Convert.ToString(DbNull.IsDbNull(reader["PhoneNumber"]));
                         var post = Convert.ToString(DbNull.IsDbNull(reader["Post"]));
-                        var jobId = Convert.ToInt32(DbNull.IsDbNull(reader["Job"]));
-                        var job = organization.GetOrganization(jobId);
+
+                        Organization job=null;
+                        if (DbNull.IsDbNull(reader["Job"]) != null)
+                        {
+                            var jobId = Convert.ToInt32(DbNull.IsDbNull(reader["Job"]));
+                            job = organization.GetOrganization(jobId);
+                        }
                         var ITN = Convert.ToString(reader["ITN"]);
                         var birthday = Convert.ToDateTime(reader["Birthday"]);
                         var name = Convert.ToString(reader["Name"]);
@@ -84,7 +89,7 @@ namespace DbInterface.AdoNet
                     connction.Open();
 
 
-                    string sql = id > 0 ? updateSqlContact : insertSqlContact;
+                    string sql = id > -1 ? updateSqlContact : insertSqlContact;
                     SqlCommand cmd = new SqlCommand(sql, connction);
                   
                     cmd.Parameters.AddWithValue("@Name", Name);
@@ -95,7 +100,7 @@ namespace DbInterface.AdoNet
                     cmd.Parameters.AddWithValue("@Birthday", Birthday);
                     cmd.Parameters.AddWithValue("@ITN", ITN);
                     cmd.Parameters.AddWithValue("@Post", DbNull.TryToDbNull(Post));
-                    cmd.Parameters.AddWithValue("@Job", Convert.ToString(DbNull.TryToDbNull(Job)));
+                    cmd.Parameters.AddWithValue("@Job", DbNull.TryToDbNull(Job));
 
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();

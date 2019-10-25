@@ -1,5 +1,6 @@
 ﻿using Contact.CustomSerializer;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace Contact
     public class ContactFileSaver : IDisposable
     {
         private bool _isDispose = true;
-        private string _path = "file.csv";
+        private string _path = @"C:\Users\asimonov\Documents\ContactServices\ContactService\files\file.csv";
 
         public string Path
         {
@@ -22,15 +23,23 @@ namespace Contact
             }
         }
         public StreamWriter StreamWriter { get; }
-
+        public FileStream FileStream { get; }
         public ContactFileSaver()
         {
-            StreamWriter = new StreamWriter(_path, false, Encoding.UTF8);
+            FileStream = new FileStream(_path, FileMode.Create, System.Security.AccessControl.FileSystemRights.FullControl, FileShare.Write, 4096, FileOptions.None);
+            StreamWriter = new StreamWriter(FileStream, Encoding.UTF8);
             _isDispose = false;
         }
         public void Save(Contact person)
         {
             var serealizer = new SerializerToCsv();
+            serealizer.Serialize(StreamWriter, person, null);
+            Dispose();
+        }
+        public void Save(List<Contact> persons)
+        {
+            var serealizer = new SerializerToCsv();
+            foreach(var person in persons)
             serealizer.Serialize(StreamWriter, person, null);
             Dispose();
         }
@@ -44,6 +53,7 @@ namespace Contact
             if (!_isDispose)
             {
                 StreamWriter.Dispose();
+                FileStream.Dispose();
                 _isDispose = true;
             }
 
