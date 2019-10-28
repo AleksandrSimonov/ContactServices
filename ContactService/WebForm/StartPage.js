@@ -127,7 +127,6 @@ else{
     return false;
 }
 }
-
 function ValidateITN(ITN){
 
     var strITN= String(ITN.value);
@@ -289,19 +288,31 @@ function GetContactsFile(){
         type: "POST",
         url: "../ContactService.svc/GetContactsFile",
         contentType: "application/json; charset=utf-8",
-        dataType: "json",
+        //sdataType: "json",
         data: JSON.stringify(SearchObject($("#IdSearch").val())),
-        success:  function(response) {
+        success:  function(response, res) {
             let a = document.createElement('a');
             a.href = response.d;
             a.download = "file.csv";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            
-                 
+
+            var newContent="";
+            for (var i = 0; i < response.d._buffer.length; i++) {         //solution code
                 
-                
+                newContent += String.fromCharCode( response.d._buffer[i]);}
+
+            let link = document.createElement('a');
+            link.download = 'hello.xls';
+            var excelBlob = new Blob([response.d._buffer], { type:  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  }, "excel.xls"); 
+            link.href = URL.createObjectURL(excelBlob);
+
+            link.click();
+           
+        },
+        error: function() {
+            alert('error');
         }
       });
 }
@@ -316,6 +327,7 @@ function AddNewContactForm(){
     $('#ContactId').val("-1");
  
     $('#ContactFormTitle')[0].innerText="Добавьте новый контакт";
+    $('#exampleModalCenter').modal();
 }
 function UpdateContactForm(options){
     $('#exampleModalCenter').modal();

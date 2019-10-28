@@ -9,7 +9,7 @@ namespace Contact
     public class ContactFileSaver : IDisposable
     {
         private bool _isDispose = true;
-        private string _path = @"C:\Users\asimonov\Documents\ContactServices\ContactService\files\file.csv";
+        private string _path = @"C:\Users\asimonov\Documents\ContactServices\ContactService\files\file1.csv";
 
         public string Path
         {
@@ -42,6 +42,13 @@ namespace Contact
             foreach(var person in persons)
             serealizer.Serialize(StreamWriter, person, null);
             Dispose();
+        }
+        public Stream SaveToExcel(List<Contact> contacts)
+        {
+            var saver = new SaverToExcel(contacts);
+          return saver.GetFileStreamSaver(contacts);
+           // var streamSaver = new StreamWriter(stream);
+            //streamSaver.Flush();
         }
         public void Save(Contact person, string path)
         {

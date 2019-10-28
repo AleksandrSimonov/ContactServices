@@ -70,6 +70,7 @@
     <Compile Include="ContactTest\RandomContact.cs" />
     <Compile Include="ContactValidation\ContactValidater.cs" />
     <Compile Include="ContactValidation\ContactValidatorResult.cs" />
+    <Compile Include="CustomSerializer\SaverToExcel.cs" />
     <Compile Include="CustomSerializer\ICustomSerializable.cs" />
     <Compile Include="CustomSerializer\OutputFormat.cs" />
     <Compile Include="CustomSerializer\Serializer.cs" />

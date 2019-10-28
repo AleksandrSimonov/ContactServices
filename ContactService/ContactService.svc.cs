@@ -5,6 +5,8 @@ using System.ServiceModel.Activation;
 using System.Text.Json;
 using DbInterface.AdoNet;
 using System.Configuration;
+using System.IO;
+
 namespace ContactService
 {
     [ServiceContract(Namespace = "")]
@@ -61,23 +63,30 @@ namespace ContactService
         }
 
         [OperationContract]
-        public string GetContactsFile(string surname, string name)
+        public Stream GetContactsFile(string surname, string name)
         {
             var contactDB = new ContactDB(_DataSource);
             Contact.ContactFileSaver fileSaver=null;
+   
             try
             {
                 var contacts = contactDB.GetContacts(surname, name);
                 fileSaver = new Contact.ContactFileSaver();
-                fileSaver.Save(contacts);
-                return "http://localhost:8091/files/file.csv";
+                var stream =  fileSaver.SaveToExcel(contacts);
+                return stream;
+
+                //return null;// "http://localhost:8091/files/file.csv";
 
             }
             catch (Exception ex)
             {
-                if(fileSaver!=null)
+                return null;
+            }
+            finally
+            {
+                if (fileSaver != null)
                     fileSaver.Dispose();
-              return null;
+              
             }
         }
 
