@@ -275,47 +275,55 @@ function SearchContact(){
                                         
                                        
                               
-                }
-                
+                }          
                 //$('#ContactsTable').append('<option value="'+obj.Id+'" >'+obj.Name+'</option>');
             });
         }
       });
 }
-
+var workbook1=null;
 function GetContactsFile(){
     $.ajax({
         type: "POST",
         url: "../ContactService.svc/GetContactsFile",
         contentType: "application/json; charset=utf-8",
-        //sdataType: "json",
+        //dataType: "json",
         data: JSON.stringify(SearchObject($("#IdSearch").val())),
-        success:  function(response, res) {
-            let a = document.createElement('a');
-            a.href = response.d;
-            a.download = "file.csv";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            var newContent="";
-            for (var i = 0; i < response.d._buffer.length; i++) {         //solution code
-                
-                newContent += String.fromCharCode( response.d._buffer[i]);}
-
-            let link = document.createElement('a');
-            link.download = 'hello.xls';
-            var excelBlob = new Blob([response.d._buffer], { type:  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  }, "excel.xls"); 
-            link.href = URL.createObjectURL(excelBlob);
-
-            link.click();
-           
+        success:  function(response) {
+           var workbook = XLSX.read(response.d._buffer, {type:"array"});
+            XLSX.writeFile(workbook, "contacts.xlsx");
+            workbook1=workbook;
         },
         error: function() {
             alert('error');
         }
       });
 }
+
+function UploadContacts(){
+
+   var file = document.getElementById("myFile").files[0];
+   var fr = new FileReader();
+   fr.onload = receivedText;
+
+   fr.readAsArrayBuffer(file);
+   
+function receivedText() {
+
+   var result = fr.result;
+   var uint8ArrayContacts = new Uint8Array(result);
+   var binaryContacts = [...uint8ArrayContacts];
+
+    $.ajax({
+		url         : '../ContactService.svc/UploadContact',
+		type        : 'POST', // важно!
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({
+            Contacts: binaryContacts})
+    })
+  }   
+}
+
 function AddNewContactForm(){
     $('#ContactForm input').each(function(i, obj){
         obj.value="";

@@ -20,7 +20,7 @@ namespace Contact
         private Organization() { }
         public override string ToString()
         {
-            return $"Id: {Id} Name: {Name} PhoneNumber: {PhoneNumber}";
+            return Id.ToString();//$"Id: {Id} Name: {Name} PhoneNumber: {PhoneNumber}";
         }
     }
 }

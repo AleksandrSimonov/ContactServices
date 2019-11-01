@@ -60,13 +60,13 @@ namespace Contact
             Job = job;
         }
 
-        public Contact(int id, string name, string surname, string lastname, SexEnum sex, double ITN,
+        public Contact(int id, string name, string surname, string lastname, SexEnum sex, string ITN,
             DateTime birthday)
         {
             if ((name == null) ||
                 (surname == null) ||
                 (lastname == null) ||
-                (ITN == 0)||
+                (ITN == "")||
               (id == 0))
                 throw new NullReferenceException();
             Id = id;

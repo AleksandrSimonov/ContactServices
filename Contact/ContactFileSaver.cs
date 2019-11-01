@@ -43,7 +43,7 @@ namespace Contact
             serealizer.Serialize(StreamWriter, person, null);
             Dispose();
         }
-        public Stream SaveToExcel(List<Contact> contacts)
+        public byte[] SaveToExcel(List<Contact> contacts)
         {
             var saver = new SaverToExcel(contacts);
           return saver.GetFileStreamSaver(contacts);

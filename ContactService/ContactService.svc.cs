@@ -6,6 +6,12 @@ using System.Text.Json;
 using DbInterface.AdoNet;
 using System.Configuration;
 using System.IO;
+using System.Web;
+using System.Net.Http;
+using System.Net;
+using System.ServiceModel.Web;
+using OfficeOpenXml;
+using DbInterface;
 
 namespace ContactService
 {
@@ -23,6 +29,7 @@ namespace ContactService
         public ContactService()
         {
             _DataSource = Convert.ToString(ConfigurationManager.AppSettings["DataSource"]);
+            Logger.InitLogger();
         }
 
         [OperationContract]
@@ -63,16 +70,22 @@ namespace ContactService
         }
 
         [OperationContract]
-        public Stream GetContactsFile(string surname, string name)
+        public MemoryStream GetContactsFile(string surname, string name)
         {
             var contactDB = new ContactDB(_DataSource);
             Contact.ContactFileSaver fileSaver=null;
    
             try
             {
+
                 var contacts = contactDB.GetContacts(surname, name);
                 fileSaver = new Contact.ContactFileSaver();
-                var stream =  fileSaver.SaveToExcel(contacts);
+          
+                var stream =  new MemoryStream(fileSaver.SaveToExcel(contacts));
+                Logger.Log.Info("поток отправлен пользователю");
+
+                //WebOperationContext.Current.OutgoingResponse.ContentType ="application/vnd.ms-excel";
+
                 return stream;
 
                 //return null;// "http://localhost:8091/files/file.csv";
@@ -80,6 +93,7 @@ namespace ContactService
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
             finally
@@ -88,6 +102,37 @@ namespace ContactService
                     fileSaver.Dispose();
               
             }
+        }
+
+        [OperationContract]
+        public string UploadContact(byte[] Contacts)
+        {
+            try
+            {
+                var pack = new ExcelPackage(new MemoryStream(Contacts));
+                ContactsExcelFile excelFile = new ContactsExcelFile(pack, _DataSource);
+                var contacts = excelFile.GetContactsList();
+                var db = new ContactDB(_DataSource);
+                var result = db.InsertOrUpdateContact(contacts);
+
+                if (result)
+                {
+                    return "Контакты успешно обработаны сервером";
+                }
+                else
+                {
+                    return "В ходе добавления контактов возникла ошика!\n" +
+                        "Один или несколько контактов не были обноавлены или добавлены";
+                }
+                
+                
+            }
+            catch(Exception e)
+            {
+                return "В ходе добавления контактов возникла ошика!\n" +
+                                        "Один или несколько контактов не были обноавлены или добавлены";
+            }
+      
         }
 
         [OperationContract]

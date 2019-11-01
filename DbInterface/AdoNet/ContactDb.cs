@@ -41,7 +41,7 @@ namespace DbInterface.AdoNet
                     while (reader.Read())//есть ли данные
                     {
                         var id = Convert.ToInt32(reader["ID"]);
-                        var sex = (SexEnum)Convert.ToInt32(reader["Sex"]);
+                        var sex = new SexEnum((Sex)Convert.ToInt32(reader["Sex"]));
                         var phoneNumber = Convert.ToString(DbNull.IsDbNull(reader["PhoneNumber"]));
                         var post = Convert.ToString(DbNull.IsDbNull(reader["Post"]));
 
@@ -69,7 +69,7 @@ namespace DbInterface.AdoNet
             return contacts;
         }
 
-        public void InsertOrUpdateContact(int id, string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
+        public bool InsertOrUpdateContact(int id, string Name, string Surname, string Lastname, int Sex, string PhoneNumber,
                                     DateTime Birthday, string ITN, string Post, int Job)
         {
             var insertSqlContact = string.Format("Insert Into Contact" +
@@ -104,14 +104,27 @@ namespace DbInterface.AdoNet
 
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();
+                    return true;
                 }
             }
             catch (SqlException sqlEx)
             {
-                throw sqlEx;
+                return false;
             }
         }
 
+        public bool InsertOrUpdateContact(List<Contact.Contact> contacts) {
+
+            bool allContactsIsHandl = true;
+
+            foreach(var contact in contacts)
+            {
+                allContactsIsHandl = allContactsIsHandl & InsertOrUpdateContact(contact.Id, contact.Name, contact.Surname, contact.Lastname, (int) contact.Sex.Sex, contact.PhoneNumber,
+                                      contact.Birthday, contact.ITN, contact.Post, contact.Job.Id);
+            }
+            return allContactsIsHandl;
+
+        }
         public void DeleteContact(string id)
         {
             string sql = string.Format($"Delete from Contact where ID = '{id}'");

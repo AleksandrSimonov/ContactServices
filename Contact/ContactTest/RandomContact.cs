@@ -27,7 +27,7 @@ namespace Contact.ContactTest
         }
         private SexEnum RandomSex()
         {
-            return (SexEnum) _rand.Next(0, 2);
+            return new SexEnum((Sex)_rand.Next(0, 2));
         }
         private string RandomPhoneNumber()
         {
@@ -57,13 +57,13 @@ namespace Contact.ContactTest
             var birthday = new DateTime(year, month, day);
             return birthday;
         }
-        private double RandomITN()
+        private string RandomITN()
         {
             int length = 12;
             return _rand.Next(
                (int) Math.Pow(10, length),
                (int) Math.Pow(10, length + 1)
-                              );
+                              ).ToString();
         }
         private string RandomPost()
         {
